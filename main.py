@@ -1,3 +1,4 @@
+# Домашка 16
 import json
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -10,6 +11,7 @@ app.config['JSON_AS_ASCII'] = False
 db = SQLAlchemy(app)
 
 
+# Описание моделей таблиц базы данных
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
@@ -49,7 +51,11 @@ db.create_all()
 session = db.session()
 
 
+# Функции
 def add_user():
+    """
+    Заполнение таблицы пользователей
+    """
     with open("users.json", 'r', encoding='utf-8') as file:
         dict_data = json.load(file)
         for data in dict_data:
@@ -60,6 +66,9 @@ def add_user():
 
 
 def add_order():
+    """
+    Заполнение таблицы ордеров
+    """
     with open("orders.json", 'r', encoding='utf-8') as file:
         dict_data = json.load(file)
         for data in dict_data:
@@ -72,6 +81,9 @@ def add_order():
 
 
 def add_offer():
+    """
+    Заполнение таблицы предложений
+    """
     with open("offers.json", 'r', encoding='utf-8') as file:
         dict_data = json.load(file)
         for data in dict_data:
@@ -81,6 +93,9 @@ def add_offer():
 
 
 def user_to_dict(instance):
+    """
+    Вывод в словарь записи таблицы пользователей
+    """
     return {
         "id": instance.id,
         "first_name": instance.first_name,
@@ -93,6 +108,9 @@ def user_to_dict(instance):
 
 
 def order_to_dict(instance):
+    """
+    Вывод в словарь записи таблицы ордеров
+    """
     return {
         "id": instance.id,
         "name": instance.name,
@@ -107,6 +125,9 @@ def order_to_dict(instance):
 
 
 def offer_to_dict(instance):
+    """
+    Вывод в словарь записи таблицы предложений
+    """
     return {
         "id": instance.id,
         "order_id": instance.order_id,
@@ -114,6 +135,7 @@ def offer_to_dict(instance):
     }
 
 
+# Заполнение таблиц
 add_user()
 add_order()
 add_offer()
@@ -177,7 +199,7 @@ def get_one_user(uid):
 @app.route("/orders", methods=(['GET', 'POST']))
 def get_orders():
     """
-    Получение списка всех пользователей
+    Получение списка всех ордеров
     или добавление нового в зависимости от метода
     """
     if request.method == 'GET':
@@ -197,7 +219,7 @@ def get_orders():
 @app.route("/orders/<int:uid>", methods=(['GET', 'PUT', 'DELETE']))
 def get_one_order(uid):
     """
-    Получение, обновление или удаление пользователя
+    Получение, обновление или удаление ордера
     в зависимости от метода
     """
     orders = Order.query.get(uid)
@@ -228,7 +250,7 @@ def get_one_order(uid):
 @app.route("/offers", methods=(['GET', 'POST']))
 def get_offers():
     """
-    Получение списка всех пользователей
+    Получение списка всех предложений
     или добавление нового в зависимости от метода
     """
     if request.method == 'GET':
@@ -248,7 +270,7 @@ def get_offers():
 @app.route("/offers/<int:uid>", methods=(['GET', 'PUT', 'DELETE']))
 def get_one_offer(uid):
     """
-    Получение, обновление или удаление пользователя
+    Получение, обновление или удаление предложения
     в зависимости от метода
     """
     offers = Offer.query.get(uid)
