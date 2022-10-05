@@ -161,6 +161,7 @@ def get_users():
             last_name=data.get('last_name'),
             age=data.get('age'),
             email=data.get('email'),
+            role=data.get('role'),
             phone=data.get('phone')
         )
         db.session.add(user)
@@ -186,7 +187,7 @@ def get_one_user(uid):
             return "<h1>Запись удалена</h1>"
         if request.method == 'PUT':
             data = request.json
-            users.id = data.get('id')
+#            users.id = data.get('id')  # исправлено по замечанию преподавателя
             users.first_name = data.get('first_name')
             users.last_name = data.get('last_name')
             users.age = data.get('age')
@@ -210,7 +211,17 @@ def get_orders():
         return jsonify(result)
     if request.method == 'POST':
         data = request.json
-        order = Order(**data)
+        order = Order(
+            id=data.get("id"),
+            name=data.get("name"),
+            description=data.get("description"),
+            start_date=datetime.strptime(data.get("start_date"), "%m/%d/%Y"),
+            end_date=datetime.strptime(data.get("end_date"), "%m/%d/%Y"),
+            address=data.get("address"),
+            price=data.get("price"),
+            customer_id=data.get("customer_id"),
+            executor_id=data.get("executor_id")
+             )
         db.session.add(order)
         db.session.commit()
         return jsonify(order_to_dict(order))
@@ -234,11 +245,11 @@ def get_one_order(uid):
             return "<h1>Запись удалена</h1>"
         if request.method == 'PUT':
             data = request.json
-            orders.id = data.get('id')
+#            orders.id = data.get('id') # исправлено по замечанию преподавателя
             orders.name = data.get('name')
             orders.description = data.get('description')
-            orders.start_date = data.get('start_date')
-            orders.end_date = data.get('end_date')
+            orders.start_date = datetime.strptime(data.get('start_date'), "%m/%d/%Y")
+            orders.end_date = datetime.strptime(data.get('end_date'), "%m/%d/%Y")
             orders.address = data.get('address')
             orders.price = data.get('price')
             orders.customer_id = data.get('customer_id')
@@ -285,7 +296,7 @@ def get_one_offer(uid):
             return "<h1>Запись удалена</h1>"
         if request.method == 'PUT':
             data = request.json
-            offers.id = data.get('id')
+#            offers.id = data.get('id') # исправлено по замечанию преподавателя
             offers.order_id = data.get('order_id')
             offers.executor_id = data.get('executor_id')
             db.session.commit()
